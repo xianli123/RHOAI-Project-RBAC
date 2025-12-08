@@ -782,7 +782,7 @@ const ProjectDetails: React.FunctionComponent = () => {
           style={{ marginTop: 'var(--pf-v6-global--spacer--lg)' }}
         >
           <Tab eventKey="overview" title="Overview" id="project-tab-overview">
-            <TabContent>
+            <TabContent id="project-tab-content-overview">
               <TabContentBody>
                 <PageSection variant="default" hasBodyWrapper={false}>
                   <Title headingLevel="h2" size="lg" style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
@@ -890,7 +890,7 @@ const ProjectDetails: React.FunctionComponent = () => {
             </TabContent>
           </Tab>
           <Tab eventKey="workbenches" title="Workbenches" id="project-tab-workbenches">
-            <TabContent>
+            <TabContent id="project-tab-content-workbenches">
               <TabContentBody>
                 <PageSection variant="default">
                   <Title headingLevel="h2" size="lg">
@@ -901,7 +901,7 @@ const ProjectDetails: React.FunctionComponent = () => {
             </TabContent>
           </Tab>
           <Tab eventKey="pipelines" title="Pipelines" id="project-tab-pipelines">
-            <TabContent>
+            <TabContent id="project-tab-content-pipelines">
               <TabContentBody>
                 <PageSection variant="default">
                   <Title headingLevel="h2" size="lg">
@@ -912,7 +912,7 @@ const ProjectDetails: React.FunctionComponent = () => {
             </TabContent>
           </Tab>
           <Tab eventKey="deployments" title="Deployments" id="project-tab-deployments">
-            <TabContent>
+            <TabContent id="project-tab-content-deployments">
               <TabContentBody>
                 <PageSection variant="default">
                   <Title headingLevel="h2" size="lg">
@@ -923,7 +923,7 @@ const ProjectDetails: React.FunctionComponent = () => {
             </TabContent>
           </Tab>
           <Tab eventKey="cluster-storage" title="Cluster storage" id="project-tab-cluster-storage">
-            <TabContent>
+            <TabContent id="project-tab-content-cluster-storage">
               <TabContentBody>
                 <PageSection variant="default">
                   <Title headingLevel="h2" size="lg">
@@ -934,7 +934,7 @@ const ProjectDetails: React.FunctionComponent = () => {
             </TabContent>
           </Tab>
           <Tab eventKey="connections" title="Connections" id="project-tab-connections">
-            <TabContent>
+            <TabContent id="project-tab-content-connections">
               <TabContentBody>
                 <PageSection variant="default">
                   <Title headingLevel="h2" size="lg">
@@ -945,7 +945,7 @@ const ProjectDetails: React.FunctionComponent = () => {
             </TabContent>
           </Tab>
           <Tab eventKey="permissions" title="Permissions" id="project-tab-permissions">
-            <TabContent>
+            <TabContent id="project-tab-content-permissions">
               <TabContentBody>
                 <PageSection variant="default" hasBodyWrapper={false}>
                   <Alert
@@ -975,7 +975,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           <Th
                             style={tableHeaderStyle}
                             sort={{
-                              sortBy: usersSortBy,
+                              sortBy: usersSortBy || {},
                               onSort: onUsersSort,
                               columnIndex: 0,
                             }}
@@ -985,7 +985,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           <Th
                             style={tableHeaderStyle}
                             sort={{
-                              sortBy: usersSortBy,
+                              sortBy: usersSortBy || {},
                               onSort: onUsersSort,
                               columnIndex: 1,
                             }}
@@ -995,7 +995,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           <Th
                             style={tableHeaderStyle}
                             sort={{
-                              sortBy: usersSortBy,
+                              sortBy: usersSortBy || {},
                               onSort: onUsersSort,
                               columnIndex: 2,
                             }}
@@ -1313,7 +1313,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           <Th
                             style={tableHeaderStyle}
                             sort={{
-                              sortBy: groupsSortBy,
+                              sortBy: groupsSortBy || {},
                               onSort: onGroupsSort,
                               columnIndex: 0,
                             }}
@@ -1323,7 +1323,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           <Th
                             style={tableHeaderStyle}
                             sort={{
-                              sortBy: groupsSortBy,
+                              sortBy: groupsSortBy || {},
                               onSort: onGroupsSort,
                               columnIndex: 1,
                             }}
@@ -1333,7 +1333,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           <Th
                             style={tableHeaderStyle}
                             sort={{
-                              sortBy: groupsSortBy,
+                              sortBy: groupsSortBy || {},
                               onSort: onGroupsSort,
                               columnIndex: 2,
                             }}

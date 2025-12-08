@@ -108,8 +108,8 @@ const Projects: React.FunctionComponent = () => {
   const [page, setPage] = React.useState(1);
   const [perPage, setPerPage] = React.useState(PER_PAGE_DEFAULT);
 
-  const onSearchChange = (_value: string, event: React.FormEvent<HTMLInputElement>) => {
-    setSearchValue(event.currentTarget.value);
+  const onSearchChange = (event: React.FormEvent<HTMLInputElement>, value: string) => {
+    setSearchValue(value);
     setPage(1);
   };
 
@@ -191,7 +191,7 @@ const Projects: React.FunctionComponent = () => {
               Create project
             </Button>
           </ToolbarItem>
-          <ToolbarItem alignment={{ default: 'alignRight' }} variant="pagination">
+          <ToolbarItem variant="pagination">
             {pagination}
           </ToolbarItem>
         </ToolbarContent>

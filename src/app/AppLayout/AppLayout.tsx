@@ -101,14 +101,12 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   };
 
   const renderNavGroup = (group: IAppRouteGroup, groupIndex: number) => {
-    const icon = getIconForRoute(group.label);
     return (
       <NavExpandable
         key={`${group.label}-${groupIndex}`}
         id={`nav-group-${group.label}-${groupIndex}`}
         title={group.label}
         isActive={group.routes.some((route) => route.path === location.pathname)}
-        icon={icon ? <Icon>{icon}</Icon> : undefined}
       >
         {group.routes.map((route, idx) => route.label && renderNavItem(route, idx))}
       </NavExpandable>
