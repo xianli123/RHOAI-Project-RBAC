@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Dashboard } from '@app/Dashboard/Dashboard';
-import { Support } from '@app/Support/Support';
+import { Projects } from '@app/Projects/Projects';
+import { ProjectDetails } from '@app/Projects/ProjectDetails';
+import { AIHub } from '@app/AIHub/AIHub';
+import { GenAIStudio } from '@app/GenAIStudio/GenAIStudio';
+import { DevelopTrain } from '@app/DevelopTrain/DevelopTrain';
+import { ObserveMonitor } from '@app/ObserveMonitor/ObserveMonitor';
+import { LearningResources } from '@app/LearningResources/LearningResources';
+import { Applications } from '@app/Applications/Applications';
 import { GeneralSettings } from '@app/Settings/General/GeneralSettings';
 import { ProfileSettings } from '@app/Settings/Profile/ProfileSettings';
 import { NotFound } from '@app/NotFound/NotFound';
@@ -28,16 +35,89 @@ const routes: AppRouteConfig[] = [
   {
     element: <Dashboard />,
     exact: true,
-    label: 'Dashboard',
+    label: 'Home',
     path: '/',
-    title: 'PatternFly Seed | Main Dashboard',
+    title: 'Red Hat OpenShift AI | Home',
   },
   {
-    element: <Support />,
+    element: <Projects />,
     exact: true,
-    label: 'Support',
-    path: '/support',
-    title: 'PatternFly Seed | Support Page',
+    label: 'Projects',
+    path: '/projects',
+    title: 'Red Hat OpenShift AI | Projects',
+  },
+  {
+    element: <ProjectDetails />,
+    exact: true,
+    path: '/projects/:projectId',
+    title: 'Red Hat OpenShift AI | Project Details',
+  },
+  {
+    label: 'AI hub',
+    routes: [
+      {
+        element: <AIHub />,
+        exact: true,
+        label: 'AI Hub',
+        path: '/ai-hub',
+        title: 'Red Hat OpenShift AI | AI Hub',
+      },
+    ],
+  },
+  {
+    label: 'Gen AI studio',
+    routes: [
+      {
+        element: <GenAIStudio />,
+        exact: true,
+        label: 'Gen AI Studio',
+        path: '/gen-ai-studio',
+        title: 'Red Hat OpenShift AI | Gen AI Studio',
+      },
+    ],
+  },
+  {
+    label: 'Develop & train',
+    routes: [
+      {
+        element: <DevelopTrain />,
+        exact: true,
+        label: 'Develop & Train',
+        path: '/develop-train',
+        title: 'Red Hat OpenShift AI | Develop & Train',
+      },
+    ],
+  },
+  {
+    label: 'Observe & monitor',
+    routes: [
+      {
+        element: <ObserveMonitor />,
+        exact: true,
+        label: 'Observe & Monitor',
+        path: '/observe-monitor',
+        title: 'Red Hat OpenShift AI | Observe & Monitor',
+      },
+    ],
+  },
+  {
+    element: <LearningResources />,
+    exact: true,
+    label: 'Learning resources',
+    path: '/learning-resources',
+    title: 'Red Hat OpenShift AI | Learning Resources',
+  },
+  {
+    label: 'Applications',
+    routes: [
+      {
+        element: <Applications />,
+        exact: true,
+        label: 'Applications',
+        path: '/applications',
+        title: 'Red Hat OpenShift AI | Applications',
+      },
+    ],
   },
   {
     label: 'Settings',
@@ -47,14 +127,14 @@ const routes: AppRouteConfig[] = [
         exact: true,
         label: 'General',
         path: '/settings/general',
-        title: 'PatternFly Seed | General Settings',
+        title: 'Red Hat OpenShift AI | General Settings',
       },
       {
         element: <ProfileSettings />,
         exact: true,
         label: 'Profile',
         path: '/settings/profile',
-        title: 'PatternFly Seed | Profile Settings',
+        title: 'Red Hat OpenShift AI | Profile Settings',
       },
     ],
   },
