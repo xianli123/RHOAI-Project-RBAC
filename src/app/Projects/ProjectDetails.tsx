@@ -41,8 +41,10 @@ import {
   TabTitleText,
   TextInputGroup,
   TextInputGroupMain,
+  TextArea,
   Title,
   Tooltip,
+  Content,
 } from '@patternfly/react-core';
 import {
   Table,
@@ -1810,9 +1812,9 @@ const ProjectDetails: React.FunctionComponent = () => {
                 </Label>
               </FlexItem>
             </Flex>
-            <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
+            <Content style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
               {roleMap[selectedRoleId].description || 'Description goes here'}
-            </div>
+            </Content>
             <Tabs
               activeKey={activeRoleModalTab}
               onSelect={(_event, key) => setActiveRoleModalTab(key as 'details' | 'assignees')}
@@ -1820,6 +1822,14 @@ const ProjectDetails: React.FunctionComponent = () => {
               unmountOnExit
             >
               <Tab eventKey="details" title={<TabTitleText>Role details</TabTitleText>}>
+                <TextArea
+                  value={roleMap[selectedRoleId].description || ''}
+                  placeholder="Description goes here"
+                  id="role-description-textarea"
+                  aria-label="Role description"
+                  readOnly
+                  style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}
+                />
                 <DescriptionList isHorizontal isCompact style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
                   <DescriptionListGroup>
                     <DescriptionListTerm>
@@ -1856,7 +1866,6 @@ const ProjectDetails: React.FunctionComponent = () => {
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 </DescriptionList>
-                <Divider style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }} />
                 <Title headingLevel="h3" size="lg" style={{ marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>
                   Rules
                 </Title>
@@ -1966,7 +1975,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                           </Flex>
                         </Td>
                         <Td>
-                          <span style={{ textDecoration: 'underline' }}>{assignee.dateAdded}</span>
+                          <span style={{ textDecoration: 'underline', textDecorationStyle: 'dashed' }}>{assignee.dateAdded}</span>
                         </Td>
                       </Tr>
                     ))}
