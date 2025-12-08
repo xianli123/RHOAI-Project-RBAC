@@ -14,6 +14,8 @@ import {
   DropdownItem,
   DropdownList,
   Label,
+  ClipboardCopy,
+  Popover,
   MenuToggle,
   Modal,
   ModalVariant,
@@ -30,6 +32,7 @@ import {
   TabContent,
   TabContentBody,
   Tabs,
+  TabTitleText,
   TextInputGroup,
   TextInputGroupMain,
   Title,
@@ -57,6 +60,7 @@ import {
   TimesIcon,
   AngleRightIcon,
   CloseIcon,
+  QuestionCircleIcon,
 } from '@patternfly/react-icons';
 
 type Project = {
@@ -145,7 +149,7 @@ const ProjectDetails: React.FunctionComponent = () => {
   const [openDropdowns, setOpenDropdowns] = React.useState<{ [key: string]: boolean }>({});
   const [isRoleModalOpen, setIsRoleModalOpen] = React.useState(false);
   const [selectedRoleId, setSelectedRoleId] = React.useState<string | undefined>();
-  
+  const [activeRoleModalTab, setActiveRoleModalTab] = React.useState<'details' | 'assignees'>('details');
   // Add user/group state
   const [isAddingUser, setIsAddingUser] = React.useState(false);
   const [isAddingGroup, setIsAddingGroup] = React.useState(false);
@@ -412,6 +416,7 @@ const ProjectDetails: React.FunctionComponent = () => {
 
   const onOpenRole = (roleId: string) => {
     setSelectedRoleId(roleId);
+    setActiveRoleModalTab('details');
     setIsRoleModalOpen(true);
   };
 
@@ -1738,45 +1743,75 @@ const ProjectDetails: React.FunctionComponent = () => {
         id="role-details-modal"
       >
         {selectedRoleId && roleMap[selectedRoleId] && (
-          <>
-            <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
-              <strong>Real role name:</strong> {roleMap[selectedRoleId].realName || '—'}
-            </div>
-            <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
-              {roleMap[selectedRoleId].description}
-            </div>
-            <Divider style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }} />
-            <Title headingLevel="h3" size="lg" style={{ marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>
-              Role details
-            </Title>
-            <Table aria-label="Role rules table" id="role-rules-table">
-              <Thead>
-                <Tr>
-                  <Th>Actions</Th>
-                  <Th>Resources</Th>
-                  <Th>Resource names</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>{roleMap[selectedRoleId].actions}</Td>
-                  <Td>{roleMap[selectedRoleId].resources}</Td>
-                  <Td>{roleMap[selectedRoleId].resourceNames}</Td>
-                </Tr>
-              </Tbody>
-            </Table>
-            <Divider style={{ margin: 'var(--pf-v6-global--spacer--lg) 0 var(--pf-v6-global--spacer--md)' }} />
-            <Title headingLevel="h3" size="lg" style={{ marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>
-              Assignees
-            </Title>
-            <div>
-              {roleMap[selectedRoleId].assignees.map((assignee) => (
-                <div key={assignee} style={{ marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>
-                  {assignee}
-                </div>
-              ))}
-            </div>
-          </>
+          <Tabs
+            activeKey={activeRoleModalTab}
+            onSelect={(_event, key) => setActiveRoleModalTab(key as 'details' | 'assignees')}
+            mountOnEnter
+            unmountOnExit
+          >
+            <Tab eventKey="details" title={<TabTitleText>Role details</TabTitleText>}>
+              <div style={{ marginBottom: 'var(--pf-v6-global--spacer--sm)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <Label color="blue" variant="outline" isCompact>
+                  AI
+                </Label>
+              </div>
+              <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
+                {roleMap[selectedRoleId].description || 'Description goes here'}
+              </div>
+              <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <strong>Real role name</strong>
+                <Popover
+                  aria-label="Real role name info"
+                  bodyContent="This is the K8s name of this role. You can find the role in OpenShift with this real name."
+                >
+                  <Button variant="plain" aria-label="Real role name help">
+                    <QuestionCircleIcon />
+                  </Button>
+                </Popover>
+              </div>
+              <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
+                <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                  {roleMap[selectedRoleId].realName || '—'}
+                </ClipboardCopy>
+              </div>
+              <Divider style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }} />
+              <Title headingLevel="h3" size="lg" style={{ marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>
+                Rules
+              </Title>
+              <Table aria-label="Role rules table" id="role-rules-table">
+                <Thead>
+                  <Tr>
+                    <Th>Actions</Th>
+                    <Th>Resources</Th>
+                    <Th>Resource names</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>{roleMap[selectedRoleId].actions}</Td>
+                    <Td>{roleMap[selectedRoleId].resources}</Td>
+                    <Td>{roleMap[selectedRoleId].resourceNames}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </Tab>
+            <Tab eventKey="assignees" title={<TabTitleText>Assignees</TabTitleText>}>
+              <Table aria-label="Role assignees table" id="role-assignees-table">
+                <Thead>
+                  <Tr>
+                    <Th>Subject</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {roleMap[selectedRoleId].assignees.map((assignee) => (
+                    <Tr key={assignee}>
+                      <Td>{assignee}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Tab>
+          </Tabs>
         )}
       </Modal>
     </>
