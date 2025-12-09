@@ -454,13 +454,12 @@ const ProjectDetails: React.FunctionComponent = () => {
   };
 
   const tableHeaderStyle: React.CSSProperties = {
-    textAlign: 'left',
-    padding: 'var(--pf-v6-global--spacer--md) var(--pf-v6-global--spacer--md)',
+    padding: 'var(--pf-v6-global--spacer--sm) var(--pf-v6-global--spacer--md)',
   };
 
   const tableCellStyle: React.CSSProperties = {
-    textAlign: 'left',
-    padding: 'var(--pf-v6-global--spacer--md) var(--pf-v6-global--spacer--md)',
+    padding: 'var(--pf-v6-global--spacer--sm) var(--pf-v6-global--spacer--md)',
+    verticalAlign: 'top',
   };
 
   const onOpenRole = (roleId: string) => {
@@ -1018,6 +1017,31 @@ const ProjectDetails: React.FunctionComponent = () => {
             <TabContent id="project-tab-content-permissions">
               <TabContentBody>
                 <PageSection variant="default" hasBodyWrapper={false}>
+                  <Card style={{ marginBottom: 'var(--pf-v6-global--spacer--lg)' }}>
+                    <CardBody>
+                      <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapMd' }}>
+                        <FlexItem>
+                          <span style={{ color: 'var(--pf-v6-global--Color--200)', fontSize: 'var(--pf-v6-global--FontSize--sm)' }}>Role menu view</span>
+                        </FlexItem>
+                        <FlexItem>
+                          <ToggleGroup aria-label="Role menu variant">
+                            <ToggleGroupItem
+                              text="Option 1"
+                              buttonId="role-menu-variant-option1"
+                              isSelected={roleMenuVariant === 'current'}
+                              onChange={() => setRoleMenuVariant('current')}
+                            />
+                            <ToggleGroupItem
+                              text="Option 2"
+                              buttonId="role-menu-variant-option2"
+                              isSelected={roleMenuVariant === 'alt'}
+                              onChange={() => setRoleMenuVariant('alt')}
+                            />
+                          </ToggleGroup>
+                        </FlexItem>
+                      </Flex>
+                    </CardBody>
+                  </Card>
                   <Alert
                     id="permissions-warning-alert"
                     variant={AlertVariant.warning}
@@ -1028,7 +1052,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                     Add users and groups that can access the project.
                   </div>
 
-                  <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                  <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)' }}>
                     <Flex alignItems={{ default: 'alignItemsCenter' }}>
                       <FlexItem>
                         <UserIcon style={{ marginRight: 'var(--pf-v6-global--spacer--sm)' }} />
@@ -1039,23 +1063,6 @@ const ProjectDetails: React.FunctionComponent = () => {
                         </Title>
                       </FlexItem>
                     </Flex>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ color: 'var(--pf-v6-global--Color--200)', fontSize: 'var(--pf-v6-global--FontSize--sm)' }}>Role menu view</span>
-                      <ToggleGroup aria-label="Role menu variant">
-                        <ToggleGroupItem
-                          text="Current"
-                          buttonId="role-menu-variant-current"
-                          isSelected={roleMenuVariant === 'current'}
-                          onChange={() => setRoleMenuVariant('current')}
-                        />
-                        <ToggleGroupItem
-                          text="Alt"
-                          buttonId="role-menu-variant-alt"
-                          isSelected={roleMenuVariant === 'alt'}
-                          onChange={() => setRoleMenuVariant('alt')}
-                        />
-                      </ToggleGroup>
-                    </div>
                   </div>
 
                   <div style={{ marginBottom: 'var(--pf-v6-global--spacer--xl)' }}>
