@@ -1458,7 +1458,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                             <div
                                               style={{
                                                 padding: 'var(--pf-v6-global--spacer--sm)',
-                                                paddingLeft: 'var(--pf-v6-global--spacer--xl)',
+                                                paddingLeft: '24px',
                                                 backgroundColor: 'var(--pf-v6-global--palette--black-100)',
                                               }}
                                             >
@@ -1925,7 +1925,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                         <div
                                           style={{
                                             padding: 'var(--pf-v6-global--spacer--sm)',
-                                            paddingLeft: 'var(--pf-v6-global--spacer--xl)',
+                                            paddingLeft: '24px',
                                             backgroundColor: 'var(--pf-v6-global--palette--black-100)',
                                           }}
                                         >
