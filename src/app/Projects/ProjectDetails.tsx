@@ -177,7 +177,7 @@ const ProjectDetails: React.FunctionComponent = () => {
   const [isUserRoleSelectOpen, setIsUserRoleSelectOpen] = React.useState(false);
   const [isGroupRoleSelectOpen, setIsGroupRoleSelectOpen] = React.useState(false);
   const [expandedRoles, setExpandedRoles] = React.useState<Set<string>>(new Set());
-  const [roleMenuVariant, setRoleMenuVariant] = React.useState<'current' | 'alt'>('current');
+  const [roleMenuVariant, setRoleMenuVariant] = React.useState<'current' | 'alt' | 'data-list'>('current');
   const [userRoleSearchValue, setUserRoleSearchValue] = React.useState('');
   const [groupRoleSearchValue, setGroupRoleSearchValue] = React.useState('');
 
@@ -1063,6 +1063,12 @@ const ProjectDetails: React.FunctionComponent = () => {
                               isSelected={roleMenuVariant === 'alt'}
                               onChange={() => setRoleMenuVariant('alt')}
                             />
+                            <ToggleGroupItem
+                              text="Option 3"
+                              buttonId="role-menu-variant-option3"
+                              isSelected={roleMenuVariant === 'data-list'}
+                              onChange={() => setRoleMenuVariant('data-list')}
+                            />
                           </ToggleGroup>
                         </FlexItem>
                       </Flex>
@@ -1362,7 +1368,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                             popperProps={{ appendTo: () => document.body }}
                           >
                             <SelectList>
-                              {roleMenuVariant === 'alt' && (
+                              {(roleMenuVariant === 'alt' || roleMenuVariant === 'data-list') && (
                                 <div style={altRoleMenuStyle}>
                                   <div style={{ width: '100%', padding: 'var(--pf-v6-global--spacer--sm) var(--pf-v6-global--spacer--md)', borderBottom: '1px solid var(--pf-v6-global--BorderColor--100)' }}>
                                     <SearchInput
@@ -1373,18 +1379,137 @@ const ProjectDetails: React.FunctionComponent = () => {
                                       id="user-role-search-input"
                                     />
                                   </div>
+                                  {roleMenuVariant === 'alt' && (
                                   <div style={altRoleHeaderRowStyle}>
                                     <span></span>
                                     <span></span>
                                     <span>Role name</span>
                                     <span>Description</span>
                                   </div>
+                                  )}
                                 </div>
                               )}
+                              {roleMenuVariant === 'data-list' ? (
+                                <div style={{ width: '100%', maxHeight: '400px', overflowY: 'auto' }}>
+                                  <ul className="pf-v6-c-data-list" role="list" aria-label="Role selection list" id="role-data-list">
                               {mockRoles
                                 .filter((role) => role.id !== 'role-custom')
                                 .filter((role) => {
-                                  if (roleMenuVariant === 'alt' && userRoleSearchValue) {
+                                        if (userRoleSearchValue) {
+                                          return role.name.toLowerCase().includes(userRoleSearchValue.toLowerCase()) ||
+                                            (role.description && role.description.toLowerCase().includes(userRoleSearchValue.toLowerCase()));
+                                        }
+                                        return true;
+                                      })
+                                      .map((role) => {
+                                        const isDisabled = selectedNewUser
+                                          ? getExistingUserRoles(selectedNewUser).has(role.id)
+                                          : false;
+                                        const isSelected = selectedNewUserRoles.has(role.id);
+                                        const isExpanded = expandedRoles.has(role.id);
+                                        return (
+                                          <li
+                                            key={role.id}
+                                            className={`pf-v6-c-data-list__item${isExpanded ? ' pf-m-expanded' : ''}`}
+                                            aria-labelledby={`role-${role.id}-title`}
+                                            id={`role-data-list-item-${role.id}`}
+                                          >
+                                            <div className="pf-v6-c-data-list__item-row">
+                                              <div className="pf-v6-c-data-list__item-content">
+                                                <div className="pf-v6-c-data-list__cell" style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--pf-v6-global--spacer--sm)', padding: 'var(--pf-v6-global--spacer--sm) var(--pf-v6-global--spacer--md)' }}>
+                                                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pf-v6-global--spacer--xs)', marginTop: '2px' }}>
+                                                    {isDisabled ? (
+                                                      <Checkbox
+                                                        id={`disabled-role-checkbox-${role.id}`}
+                                                        isDisabled
+                                                        isChecked={false}
+                                                        aria-label="Role already granted"
+                                                        onChange={() => undefined}
+                                                      />
+                                                    ) : (
+                                                      <Checkbox
+                                                        id={`role-checkbox-${role.id}`}
+                                                        isChecked={isSelected}
+                                                        onChange={(event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+                                                          event.stopPropagation();
+                                                          handleRoleToggle(role.id);
+                                                        }}
+                                                        aria-label={`Select ${role.name}`}
+                                                      />
+                                                    )}
+                                                    <Button
+                                                      variant="plain"
+                                                      onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleRoleExpansion(role.id);
+                                                      }}
+                                                      id={`expand-role-${role.id}`}
+                                                      style={{ padding: 0 }}
+                                                      aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${role.name}`}
+                                                      aria-expanded={isExpanded}
+                                                    >
+                                                      <AngleRightIcon
+                                                        className="pf-v6-c-data-list__toggle-icon"
+                                                        style={{
+                                                          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                                                          transition: 'transform 0.2s',
+                                                        }}
+                                                      />
+                                                    </Button>
+                                                  </div>
+                                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pf-v6-global--spacer--xs)', marginBottom: 'var(--pf-v6-global--spacer--xs)' }}>
+                                                      <span id={`role-${role.id}-title`} style={{ fontWeight: 600 }}>
+                                                        {role.name}
+                                                      </span>
+                                                      {role.id !== 'role-custom' && (
+                                                        <Label color="blue" variant="outline" isCompact>
+                                                          {role.label}
+                                                        </Label>
+                                                      )}
+                                                    </div>
+                                                    <div className="pf-v6-c-data-list__cell-text" style={{ color: 'var(--pf-v6-global--Color--200)', fontSize: 'var(--pf-v6-global--FontSize--sm)' }}>
+                                                      {role.description || 'Role description'}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            {isExpanded && (
+                                              <div className="pf-v6-c-data-list__expandable-content" id={`role-expandable-${role.id}`}>
+                                                <div className="pf-v6-c-data-list__expandable-content-body">
+                                                  <div style={{ padding: 'var(--pf-v6-global--spacer--md)', backgroundColor: 'var(--pf-v6-global--palette--black-100)' }}>
+                                                    <div style={{ fontWeight: 600, marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>Rules</div>
+                                                    <Table variant="compact" isNested>
+                                                      <Thead>
+                                                        <Tr>
+                                                          <Th>Actions</Th>
+                                                          <Th>Resources</Th>
+                                                          <Th>Resource names</Th>
+                                                        </Tr>
+                                                      </Thead>
+                                                      <Tbody>
+                                                        <Tr>
+                                                          <Td>{role.actions}</Td>
+                                                          <Td>{role.resources}</Td>
+                                                          <Td>{role.resourceNames}</Td>
+                                                        </Tr>
+                                                      </Tbody>
+                                                    </Table>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            )}
+                                          </li>
+                                        );
+                                      })}
+                                  </ul>
+                                </div>
+                              ) : (
+                                mockRoles
+                                  .filter((role) => role.id !== 'role-custom')
+                                  .filter((role) => {
+                                    if ((roleMenuVariant === 'alt' || roleMenuVariant === 'data-list') && userRoleSearchValue) {
                                     return role.name.toLowerCase().includes(userRoleSearchValue.toLowerCase()) ||
                                       (role.description && role.description.toLowerCase().includes(userRoleSearchValue.toLowerCase()));
                                   }
@@ -1857,7 +1982,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                 popperProps={{ appendTo: () => document.body }}
                               >
                                 <SelectList>
-                                  {roleMenuVariant === 'alt' && (
+                                  {(roleMenuVariant === 'alt' || roleMenuVariant === 'data-list') && (
                                     <div style={altRoleMenuStyle}>
                                       <div style={{ width: '100%', padding: 'var(--pf-v6-global--spacer--sm) var(--pf-v6-global--spacer--md)', borderBottom: '1px solid var(--pf-v6-global--BorderColor--100)' }}>
                                         <SearchInput
@@ -1868,15 +1993,133 @@ const ProjectDetails: React.FunctionComponent = () => {
                                           id="group-role-search-input"
                                         />
                                       </div>
+                                      {roleMenuVariant === 'alt' && (
                                       <div style={altRoleHeaderRowStyle}>
                                         <span></span>
                                         <span></span>
                                         <span>Role name</span>
                                         <span>Description</span>
                                       </div>
+                                      )}
                                     </div>
                                   )}
+                                  {roleMenuVariant === 'data-list' ? (
+                                    <div style={{ width: '100%', maxHeight: '400px', overflowY: 'auto' }}>
+                                      <ul className="pf-v6-c-data-list" role="list" aria-label="Role selection list" id="group-role-data-list">
                                   {mockRoles
+                                          .filter((role) => {
+                                            if (groupRoleSearchValue) {
+                                              return role.name.toLowerCase().includes(groupRoleSearchValue.toLowerCase()) ||
+                                                (role.description && role.description.toLowerCase().includes(groupRoleSearchValue.toLowerCase()));
+                                            }
+                                            return true;
+                                          })
+                                          .map((role) => {
+                                            const isDisabled = selectedNewGroup
+                                              ? getExistingGroupRoles(selectedNewGroup).has(role.id)
+                                              : false;
+                                            const isSelected = selectedNewGroupRoles.has(role.id);
+                                            const isExpanded = expandedRoles.has(role.id);
+                                            return (
+                                              <li
+                                                key={role.id}
+                                                className={`pf-v6-c-data-list__item${isExpanded ? ' pf-m-expanded' : ''}`}
+                                                aria-labelledby={`group-role-${role.id}-title`}
+                                                id={`group-role-data-list-item-${role.id}`}
+                                              >
+                                                <div className="pf-v6-c-data-list__item-row">
+                                                  <div className="pf-v6-c-data-list__item-content">
+                                                    <div className="pf-v6-c-data-list__cell" style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--pf-v6-global--spacer--sm)', padding: 'var(--pf-v6-global--spacer--sm) var(--pf-v6-global--spacer--md)' }}>
+                                                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pf-v6-global--spacer--xs)', marginTop: '2px' }}>
+                                                        {isDisabled ? (
+                                                          <Checkbox
+                                                            id={`disabled-group-role-checkbox-${role.id}`}
+                                                            isDisabled
+                                                            isChecked={false}
+                                                            aria-label="Role already granted"
+                                                            onChange={() => undefined}
+                                                          />
+                                                        ) : (
+                                                          <Checkbox
+                                                            id={`group-role-checkbox-${role.id}`}
+                                                            isChecked={isSelected}
+                                                            onChange={(event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+                                                              event.stopPropagation();
+                                                              handleRoleToggle(role.id);
+                                                            }}
+                                                            aria-label={`Select ${role.name}`}
+                                                          />
+                                                        )}
+                                                        <Button
+                                                          variant="plain"
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleRoleExpansion(role.id);
+                                                          }}
+                                                          id={`expand-group-role-${role.id}`}
+                                                          style={{ padding: 0 }}
+                                                          aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${role.name}`}
+                                                          aria-expanded={isExpanded}
+                                                        >
+                                                          <AngleRightIcon
+                                                            className="pf-v6-c-data-list__toggle-icon"
+                                                            style={{
+                                                              transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                                                              transition: 'transform 0.2s',
+                                                            }}
+                                                          />
+                                                        </Button>
+                                                      </div>
+                                                      <div style={{ flex: 1, minWidth: 0 }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pf-v6-global--spacer--xs)', marginBottom: 'var(--pf-v6-global--spacer--xs)' }}>
+                                                          <span id={`group-role-${role.id}-title`} style={{ fontWeight: 600 }}>
+                                                            {role.name}
+                                                          </span>
+                                                          {role.id !== 'role-custom' && (
+                                                            <Label color="blue" variant="outline" isCompact>
+                                                              {role.label}
+                                                            </Label>
+                                                          )}
+                                                        </div>
+                                                        <div className="pf-v6-c-data-list__cell-text" style={{ color: 'var(--pf-v6-global--Color--200)', fontSize: 'var(--pf-v6-global--FontSize--sm)' }}>
+                                                          {role.description || 'Role description'}
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {isExpanded && (
+                                                  <div className="pf-v6-c-data-list__expandable-content" id={`group-role-expandable-${role.id}`}>
+                                                    <div className="pf-v6-c-data-list__expandable-content-body">
+                                                      <div style={{ padding: 'var(--pf-v6-global--spacer--md)', backgroundColor: 'var(--pf-v6-global--palette--black-100)' }}>
+                                                        <div style={{ fontWeight: 600, marginBottom: 'var(--pf-v6-global--spacer--sm)' }}>Rules</div>
+                                                        <Table variant="compact" isNested>
+                                                          <Thead>
+                                                            <Tr>
+                                                              <Th>Actions</Th>
+                                                              <Th>Resources</Th>
+                                                              <Th>Resource names</Th>
+                                                            </Tr>
+                                                          </Thead>
+                                                          <Tbody>
+                                                            <Tr>
+                                                              <Td>{role.actions}</Td>
+                                                              <Td>{role.resources}</Td>
+                                                              <Td>{role.resourceNames}</Td>
+                                                            </Tr>
+                                                          </Tbody>
+                                                        </Table>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </li>
+                                            );
+                                          })}
+                                      </ul>
+                                    </div>
+                                  ) : (
+                                    mockRoles
                                     .filter((role) => {
                                       if (roleMenuVariant === 'alt' && groupRoleSearchValue) {
                                         return role.name.toLowerCase().includes(groupRoleSearchValue.toLowerCase()) ||
