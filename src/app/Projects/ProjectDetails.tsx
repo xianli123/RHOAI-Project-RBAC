@@ -1509,7 +1509,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                 mockRoles
                                   .filter((role) => role.id !== 'role-custom')
                                   .filter((role) => {
-                                    if ((roleMenuVariant === 'alt' || roleMenuVariant === 'data-list') && userRoleSearchValue) {
+                                    if (roleMenuVariant === 'alt' && userRoleSearchValue) {
                                     return role.name.toLowerCase().includes(userRoleSearchValue.toLowerCase()) ||
                                       (role.description && role.description.toLowerCase().includes(userRoleSearchValue.toLowerCase()));
                                   }
@@ -1660,7 +1660,8 @@ const ProjectDetails: React.FunctionComponent = () => {
                                     )}
                                   </React.Fragment>
                                 );
-                              })}
+                              })
+                              )}
                             </SelectList>
                           </Select>
                         </Td>
@@ -2272,7 +2273,8 @@ const ProjectDetails: React.FunctionComponent = () => {
                                         )}
                                       </React.Fragment>
                                     );
-                                  })}
+                                  })
+                                  )}
                                 </SelectList>
                               </Select>
                             </Td>
