@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   Alert,
   AlertVariant,
@@ -10,44 +10,44 @@ import {
   CardBody,
   CardTitle,
   Checkbox,
+  ClipboardCopy,
+  Content,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownList,
+  Flex,
+  FlexItem,
+  FormSelect,
+  FormSelectOption,
+  Grid,
+  GridItem,
   Label,
-  ClipboardCopy,
-  Popover,
   MenuToggle,
   Modal,
   ModalVariant,
-  Flex,
-  FlexItem,
-  Divider,
-  Grid,
-  GridItem,
   PageSection,
-  DescriptionList,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  DescriptionListDescription,
+  Popover,
+  SearchInput,
   Select,
   SelectList,
   SelectOption,
-  FormSelect,
-  FormSelectOption,
-  ToggleGroup,
-  ToggleGroupItem,
   Tab,
   TabContent,
   TabContentBody,
-  Tabs,
   TabTitleText,
+  Tabs,
+  TextArea,
   TextInputGroup,
   TextInputGroupMain,
-  TextArea,
   Title,
+  ToggleGroup,
+  ToggleGroupItem,
   Tooltip,
-  Content,
-  SearchInput,
 } from '@patternfly/react-core';
 import {
   Table,
@@ -58,20 +58,19 @@ import {
   Tr,
 } from '@patternfly/react-table';
 import {
+  AngleRightIcon,
+  CheckIcon,
+  CloseIcon,
+  CogIcon,
+  EllipsisVIcon,
+  ExclamationCircleIcon,
   FolderIcon,
   HelpIcon,
-  CogIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
+  PlusIcon,
+  QuestionCircleIcon,
+  TimesIcon,
   UserIcon,
   UsersIcon,
-  EllipsisVIcon,
-  PlusIcon,
-  CheckIcon,
-  TimesIcon,
-  AngleRightIcon,
-  CloseIcon,
-  QuestionCircleIcon,
 } from '@patternfly/react-icons';
 
 type Project = {
@@ -970,7 +969,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                             will need to configure a new server afterward.
                           </div>
                           <div style={{ marginBottom: 'var(--pf-v6-global--spacer--md)', fontSize: 'var(--pf-v6-global--FontSize--sm)' }}>
-                            Could not connect to (123), Error: Get "https://123/345/?location=": dial tcp: lookup 123: no
+                            Could not connect to (123), Error: Get &quot;https://123/345/?location=&quot;: dial tcp: lookup 123: no
                             such host
                           </div>
                           <Button id="delete-pipeline-server-button" variant="danger">
@@ -1291,7 +1290,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                   <>
                                     <Divider />
                                     <SelectOption key="create" value="create" id="create-user-option">
-                                      Select "{newUserInput}"
+                                      Select &quot;{newUserInput}&quot;
                                     </SelectOption>
                                   </>
                                 )}
@@ -1430,7 +1429,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                                       <Checkbox
                                                         id={`role-checkbox-${role.id}`}
                                                         isChecked={isSelected}
-                                                        onChange={(event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+                                                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                                           event.stopPropagation();
                                                           handleRoleToggle(role.id);
                                                         }}
@@ -1564,7 +1563,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                                 <Checkbox
                                                   id={`role-checkbox-${role.id}`}
                                                   isChecked={isSelected}
-                                                onChange={(event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+                                                onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                                   event.stopPropagation();
                                                   handleRoleToggle(role.id);
                                                 }}
@@ -1909,7 +1908,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                       <>
                                         <Divider />
                                         <SelectOption key="create" value="create" id="create-group-option">
-                                          Select "{newGroupInput}"
+                                          Select &quot;{newGroupInput}&quot;
                                         </SelectOption>
                                       </>
                                     )}
@@ -2044,7 +2043,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                                           <Checkbox
                                                             id={`group-role-checkbox-${role.id}`}
                                                             isChecked={isSelected}
-                                                            onChange={(event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+                                                            onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                                               event.stopPropagation();
                                                               handleRoleToggle(role.id);
                                                             }}
@@ -2177,7 +2176,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                                             <Checkbox
                                               id={`group-role-checkbox-${role.id}`}
                                               isChecked={isSelected}
-                                            onChange={(event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+                                            onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                               event.stopPropagation();
                                               handleRoleToggle(role.id);
                                             }}
@@ -2483,7 +2482,7 @@ const ProjectDetails: React.FunctionComponent = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {(roleMap[selectedRoleId].assigneesDetails || roleMap[selectedRoleId].assignees.map((assignee, idx) => ({
+                    {(roleMap[selectedRoleId].assigneesDetails || roleMap[selectedRoleId].assignees.map((assignee) => ({
                       roleBinding: `rb-${selectedRoleId}-${assignee.toLowerCase().replace(/\s+/g, '-')}`,
                       subject: assignee,
                       subjectType: 'User' as const,
