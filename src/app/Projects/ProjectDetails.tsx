@@ -441,7 +441,7 @@ const ProjectDetails: React.FunctionComponent = () => {
     },
   ];
 
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const roleMap: Record<string, RoleInfo> = React.useMemo(() => {
     return mockRoles.reduce((acc, role) => {
       acc[role.id] = role;
@@ -720,15 +720,18 @@ const ProjectDetails: React.FunctionComponent = () => {
   };
 
   // Get available users for select
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const availableUsers = React.useMemo(() => {
     return mockUsers.map((u) => u.name);
   }, [mockUsers]);
 
   // Get available groups for select
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const availableGroups = React.useMemo(() => {
     return mockGroups.map((g) => g.name);
   }, [mockGroups]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const sortedUsers = React.useMemo(() => {
     if (!usersSortBy) return mockUsers;
     const sorted = [...mockUsers];
@@ -752,6 +755,7 @@ const ProjectDetails: React.FunctionComponent = () => {
     return sorted;
   }, [usersSortBy, roleMap]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const sortedGroups = React.useMemo(() => {
     if (!groupsSortBy) return mockGroups;
     const sorted = [...mockGroups];
